@@ -1,0 +1,37 @@
+package com.virtusa.hibernate.client;
+
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
+
+import com.virtusa.hibernate.entity.Product;
+
+
+public class HibernateMain {
+
+	public static void main(String[] args) {
+		Product p1=new Product(101,"prod1",300,new Date());
+		Product p2=new Product(102,"prod2",500,new Date());
+		Configuration conf=new Configuration();
+		conf.configure("hibernate.cfg.xml");
+		SessionFactory sf=conf.buildSessionFactory();
+		Session s=sf.openSession();
+		Transaction tr=s.beginTransaction();
+//		s.save(p2);
+		Product p=(Product)s.get(Product.class, 101);
+		System.out.println(p);
+		Query q=s.createQuery("select p from Product as p");
+		List<Product> list=q.list();
+		list.forEach(System.out::println);
+		tr.commit();
+		s.close();
+		
+
+	}
+
+}
